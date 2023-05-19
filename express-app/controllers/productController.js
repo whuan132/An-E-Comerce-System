@@ -4,25 +4,55 @@ const Env = require("../env");
 // Get all products
 exports.getAllProducts = async (req, res) => {
   try {
-    const ret = product.getAllProducts();
-    res.json(ret || []);
+    const ret = await product.getAllProducts();
+    res.send({ code: 0, data: ret || [] });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: err.message });
+    res.send({ code: 500, data: err.message });
   }
 };
 
 // Add a new product
 exports.addProduct = async (req, res) => {
   try {
-    const ret = product.addProduct(req.body);
+    const ret = await product.addProduct(req.body);
     if (ret) {
-      res.json(ret);
+      res.send({ code: 0, data: ret });
+    } else {
+      res.send({ code: 403, data: "error" });
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: err.message });
+    res.send({ code: 500, data: err.message });
   }
 };
 
-// Update product
+// Update a product
+exports.updatePruduct = async (req, res) => {
+  try {
+    const ret = await product.updateProduct(req.params.product_id, req.body);
+    if (ret) {
+      res.send({ code: 0, data: ret });
+    } else {
+      res.send({ code: 403, data: "error" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.send({ code: 500, data: err.message });
+  }
+};
+
+// Delete a product
+exports.deleteProduct = async (req, res) => {
+  try {
+    const ret = await product.deleteProduct(req.params.product_id);
+    if (ret) {
+      res.send({ code: 0, data: ret });
+    } else {
+      res.send({ code: 403, data: "error" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.send({ code: 500, data: err.message });
+  }
+};

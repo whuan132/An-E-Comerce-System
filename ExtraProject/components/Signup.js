@@ -6,6 +6,7 @@ import {
   Text,
   StyleSheet,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import axios from "axios";
 import { SHA256 } from "crypto-js";
 import Env from "../Env";
@@ -45,37 +46,42 @@ const Signup = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry={true}
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-      />
-      <TouchableHighlight
-        style={styles.button}
-        underlayColor="#DDDDDD"
-        onPress={handleSignup}
-      >
-        <Text style={styles.buttonText}>Signup</Text>
-      </TouchableHighlight>
-      {signupError ? <Text style={styles.errorText}>{signupError}</Text> : null}
-    </View>
+    <KeyboardAwareScrollView>
+      <View style={styles.container}>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry={true}
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+        />
+        <TouchableHighlight
+          style={styles.button}
+          underlayColor="#DDDDDD"
+          onPress={handleSignup}
+        >
+          <Text style={styles.buttonText}>Signup</Text>
+        </TouchableHighlight>
+        {signupError ? (
+          <Text style={styles.errorText}>{signupError}</Text>
+        ) : null}
+      </View>
+    </KeyboardAwareScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    padding: 16,
+    paddingTop: 20,
+    marginVertical: 10,
+    marginHorizontal: 20,
   },
   input: {
     marginBottom: 12,

@@ -5,7 +5,7 @@ import Signup from "./Signup";
 const Stack = createStackNavigator();
 const LoginScreen = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="Signin">
       <Stack.Screen
         name="Signin"
         component={Signin}

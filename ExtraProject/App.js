@@ -5,11 +5,18 @@ import { NavigationContainer } from "@react-navigation/native";
 import AppContext, { reducer, Actions } from "./AppContext";
 import LoginScreen from "./components/LoginScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ProductScreen from "./components/ProductScreen";
+import FullScreenLoader from "./components/FullScreenLoader";
 
 const USER_KEY = "CS571-202305-ExtraProject-UserInfo";
 
 export default function App() {
-  const [state, dispatch] = useReducer(reducer, { user: null, order: [] });
+  const [state, dispatch] = useReducer(reducer, {
+    isLoading: true,
+    user: null,
+    order: [],
+    products: [],
+  });
 
   // Load user info
   useEffect(() => {
@@ -35,8 +42,10 @@ export default function App() {
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>
+      {state.isLoading && <FullScreenLoader />}
       <NavigationContainer>
         {state.user === null && <LoginScreen />}
+        {state.user && <ProductScreen />}
       </NavigationContainer>
     </AppContext.Provider>
   );

@@ -55,7 +55,7 @@ exports.getAllProducts = async () => {
   let ret = null;
   try {
     const col = await getProductCollection();
-    ret = col.find({}).toArray();
+    ret = await col.find({}).toArray();
   } catch (err) {
     console.log(err);
   }
@@ -84,7 +84,7 @@ exports.updateProduct = async (product_id, obj) => {
 };
 
 // Delete a product
-exports.deleteProducts = async (product_id) => {
+exports.deleteProduct = async (product_id) => {
   let ret = null;
   try {
     const col = await getProductCollection();
