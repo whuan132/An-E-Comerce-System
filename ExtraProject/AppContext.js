@@ -17,7 +17,7 @@ const Actions = {
 const reducer = (state, action) => {
   switch (action.type) {
     case Actions.LOGIN:
-      return { ...state, user: action.payload, isLoading: false };
+      return { ...state, user: action.payload, isLoading: true };
 
     case Actions.LOGOUT:
       return { ...state, user: null };

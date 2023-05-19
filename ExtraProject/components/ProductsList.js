@@ -33,6 +33,11 @@ const ProductsList = ({ navigation }) => {
           dispatch({ type: Actions.SHOW_LOADING });
           // submit to server and refresh
           await axios.delete(Env.API + "products/" + item._id);
+          // update local context data
+          const temp = [...state.products];
+          temp.splice(temp.indexOf(temp), 1);
+          dispatch({ type: Actions.PRODUCTS, payload: temp });
+          // fetch data from server
           refreshData();
         },
       },
@@ -43,10 +48,10 @@ const ProductsList = ({ navigation }) => {
     navigation.navigate("Edit", item);
   };
 
+  // fetch data from server
   const refreshData = () => {
     (async () => {
       try {
-        dispatch({ type: Actions.SHOW_LOADING });
         const res = await axios.get(Env.API + "products");
         if (res && res.data && res.data.code == 0) {
           dispatch({ type: Actions.PRODUCTS, payload: res.data.data || [] });
@@ -56,7 +61,9 @@ const ProductsList = ({ navigation }) => {
       }
     })();
   };
-  useFocusEffect(React.useCallback(refreshData, []));
+  useEffect(() => {
+    refreshData();
+  }, []);
 
   const onAddProduct = () => {
     navigation.navigate("Add");

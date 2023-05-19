@@ -51,7 +51,6 @@ const AddProduct = ({ navigation, route }) => {
 
     if (!result.canceled && !!result.assets[0]) {
       const base64String = result.assets[0].base64;
-      console.log(base64String.length);
       setProduct((prevProduct) => ({
         ...prevProduct,
         image: `data:image/jpg;base64,${base64String}`,
@@ -90,6 +89,12 @@ const AddProduct = ({ navigation, route }) => {
         };
         dispatch({ type: Actions.SHOW_LOADING });
         res = await axios.post(Env.API + "products", temp);
+        // update local context data
+        if (res.data.code === 0) {
+          temp._id = res.data.data.insertedId;
+          const tempProducts = [...state.products, temp];
+          dispatch({ type: Actions.PRODUCTS, payload: tempProducts });
+        }
       } else {
         // Edit
         const temp = {};
@@ -106,6 +111,16 @@ const AddProduct = ({ navigation, route }) => {
         }
         dispatch({ type: Actions.SHOW_LOADING });
         res = await axios.patch(Env.API + "products/" + data._id, temp);
+        // update local context data
+        if (res.data.code === 0) {
+          const tempProducts = [...state.products];
+          for (let e in product) {
+            if (product[e] != data[e]) {
+              data[e] = product[e];
+            }
+          }
+          dispatch({ type: Actions.PRODUCTS, payload: tempProducts });
+        }
       }
 
       // Handle successful
