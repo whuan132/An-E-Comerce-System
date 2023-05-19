@@ -3,7 +3,7 @@ import Signin from "./Signin";
 import Signup from "./Signup";
 
 const Stack = createStackNavigator();
-const LoginStack = () => {
+const LoginScreen = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -20,4 +20,4 @@ const LoginStack = () => {
   );
 };
 
-export default LoginStack;
+export default LoginScreen;
