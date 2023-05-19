@@ -8,15 +8,24 @@ exports.signIn = async (req, res) => {
   try {
     const { email, password } = req.body;
     const ret = await user.getUserByEmail(email);
-    if (ret && ret.password === Helper.hash(password)) {
+    if (ret && !ret.disable && ret.password === Helper.hash(password)) {
       const token = jwt.sign(ret, Env.secretKey);
-      res.json({ token });
+      res.send({
+        code: 0,
+        data: {
+          token: token,
+          role: ret.role,
+          id: ret._id,
+          email: ret.email,
+          time: ret.time,
+        },
+      });
     } else {
-      res.status(403).json({ message: "error" });
+      res.send({ code: 403, data: "error" });
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: err.message });
+    res.send({ code: 500, data: err.message });
   }
 };
 
@@ -27,12 +36,12 @@ exports.signUp = async (req, res) => {
     const ret = await user.insert(obj);
     if (ret) {
       const token = jwt.sign(ret, Env.secretKey);
-      res.json({ token });
+      res.json({ code: 0 });
     } else {
-      res.status(403).json({ message: "error" });
+      res.send({ code: 403, data: "error" });
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: err.message });
+    res.send({ code: 500, data: err.message });
   }
 };

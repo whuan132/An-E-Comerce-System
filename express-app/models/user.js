@@ -30,7 +30,7 @@ exports.getUserByEmail = async (email) => {
   let ret = null;
   try {
     const col = await getUserCollection();
-    ret = await col.findOne({ email: email, role: "customer" });
+    ret = await col.findOne({ email: email.toLowerCase() });
   } catch (err) {
     console.log(err);
   }
@@ -45,9 +45,32 @@ exports.insert = async (obj) => {
     const temp = await col.findOne({ email: obj.email, role: "customer" });
     if (temp == null) {
       obj._id = new ObjectId();
+      obj.email = obj.email.toLowerCase();
       obj.role = "customer";
       obj.time = Date.now;
+      obj.disable = false;
       ret = await col.insertOne(obj);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  return ret;
+};
+
+// Update a customer
+exports.updateUser = async (user_id, obj) => {
+  let ret = null;
+  try {
+    const col = await getUserCollection();
+    for (let e in obj) {
+      ret = await col.updateOne(
+        {
+          _id: new ObjectId(user_id),
+        },
+        {
+          $set: { [e]: obj[e] },
+        }
+      );
     }
   } catch (err) {
     console.log(err);
