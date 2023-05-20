@@ -66,10 +66,6 @@ const ProductsList = ({ navigation }) => {
     ]);
   };
 
-  const onEditProduct = (item) => {
-    navigation.navigate("Edit", item);
-  };
-
   // fetch data from server
   const refreshData = () => {
     (async () => {
@@ -90,12 +86,23 @@ const ProductsList = ({ navigation }) => {
   const onAddProduct = () => {
     navigation.navigate("Add");
   };
+  const onEditProduct = (item) => {
+    navigation.navigate("Edit", item);
+  };
+  const onProductDetail = (item) => {
+    navigation.navigate("Detail", item);
+  };
 
   // Render each product item
   const renderItem = ({ item }) => {
     return (
       <View style={styles.productItem}>
-        <Image source={{ uri: `${item.images}` }} style={styles.productImage} />
+        <TouchableOpacity onPress={() => onProductDetail(item)}>
+          <Image
+            source={{ uri: `${item.images}` }}
+            style={styles.productImage}
+          />
+        </TouchableOpacity>
         <View style={styles.productDetails}>
           <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
           <Text style={styles.productName}>{item.name}</Text>

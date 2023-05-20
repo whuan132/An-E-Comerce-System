@@ -62,6 +62,18 @@ exports.getAllProducts = async () => {
   return ret;
 };
 
+// Get a product
+exports.getProduct = async (product_id) => {
+  let ret = null;
+  try {
+    const col = await getProductCollection();
+    ret = await col.findOne({ _id: new ObjectId(product_id) });
+  } catch (err) {
+    console.log(err);
+  }
+  return ret;
+};
+
 // Update a product
 exports.updateProduct = async (product_id, obj) => {
   let ret = null;

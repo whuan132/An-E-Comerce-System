@@ -1,6 +1,8 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import AddProduct from "./AddProduct";
 import ProductsList from "./ProductsList";
+import ProductDetail from "./ProductDetail";
+import AddReview from "./AddReview";
 
 const Stack = createStackNavigator();
 const ProductScreen = () => {
@@ -20,6 +22,16 @@ const ProductScreen = () => {
         name="Edit"
         component={AddProduct}
         options={{ title: "Edit Product" }}
+      />
+      <Stack.Screen
+        name="Detail"
+        component={ProductDetail}
+        options={{ title: "Product Detail" }}
+      />
+      <Stack.Screen
+        name="AddReview"
+        component={AddReview}
+        options={{ title: "Add Review" }}
       />
     </Stack.Navigator>
   );
