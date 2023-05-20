@@ -14,6 +14,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import Env from "../Env";
 import AppContext, { Actions } from "../AppContext";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const ProductsList = ({ navigation }) => {
   const { state, dispatch } = useContext(AppContext);
@@ -105,6 +106,17 @@ const ProductsList = ({ navigation }) => {
         </TouchableOpacity>
         <View style={styles.productDetails}>
           <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
+          <View style={styles.starContainer}>
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Icon
+                key={i}
+                name="star"
+                size={16}
+                color={i <= item.review.score ? "#FFD700" : "#D3D3D3"}
+              />
+            ))}
+          </View>
+
           <Text style={styles.productName}>{item.name}</Text>
           <Text style={styles.productCategory}>{item.category}</Text>
         </View>
@@ -216,7 +228,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 16,
-    backgroundColor: "green",
+    backgroundColor: "#4287f5",
     marginLeft: 8,
   },
   buttonText: {
@@ -225,7 +237,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   addButton: {
-    backgroundColor: "blue",
+    backgroundColor: "#4287f5",
     padding: 10,
     borderRadius: 16,
     marginBottom: 30,
@@ -237,6 +249,11 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     fontWeight: "bold",
+  },
+  starContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
   },
 });
 

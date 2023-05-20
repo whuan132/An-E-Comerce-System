@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  SafeAreaView,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -77,69 +78,78 @@ const ProductDetail = ({ navigation, route }) => {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.productContainer}>
-        <Image
-          source={{ uri: `${product.images}` }}
-          style={styles.productImage}
-        />
-        <View style={styles.productDetails}>
-          <Text style={styles.productName}>{product.name}</Text>
-          <View style={styles.starContainer}>
-            {[1, 2, 3, 4, 5].map((i) => (
-              <Icon
-                key={i}
-                name="star"
-                size={16}
-                color={i <= product.review.score ? "#FFD700" : "#D3D3D3"}
-              />
-            ))}
-          </View>
-          <Text style={styles.productCategory}>{product.category}</Text>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        paddingTop: Platform.OS === "android" ? 30 : 0,
+        paddingBottom: 200,
+      }}
+    >
+      <View style={styles.container}>
+        <View style={styles.productContainer}>
+          <Image
+            source={{ uri: `${product.images}` }}
+            style={styles.productImage}
+          />
+          <View style={styles.productDetails}>
+            <Text style={styles.productName}>{product.name}</Text>
+            <View style={styles.starContainer}>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Icon
+                  key={i}
+                  name="star"
+                  size={16}
+                  color={i <= product.review.score ? "#FFD700" : "#D3D3D3"}
+                />
+              ))}
+            </View>
+            <Text style={styles.productCategory}>{product.category}</Text>
 
-          <Text style={styles.productPrice}>${product.price.toFixed(2)}</Text>
+            <Text style={styles.productPrice}>${product.price.toFixed(2)}</Text>
+          </View>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={handleAddReview}>
+            <Text style={styles.buttonIcon}>
+              <MaterialCommunityIcons
+                name="message-draw"
+                size={20}
+                color="white"
+              />
+            </Text>
+            <Text style={styles.buttonText}>Add Review</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleAddToCart}>
+            <Text style={styles.buttonIcon}>
+              <MaterialCommunityIcons
+                name="cart-arrow-down"
+                size={20}
+                color="white"
+              />
+            </Text>
+            <Text style={styles.buttonText}>Add to Cart</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.reviewsContainer}>
+          <Text style={styles.reviewsTitle}>Reviews</Text>
+          <FlatList
+            data={reviews}
+            renderItem={renderReviewItem}
+            keyExtractor={(item, index) => index.toString()}
+          />
         </View>
       </View>
-
-      <View style={styles.reviewsContainer}>
-        <Text style={styles.reviewsTitle}>Reviews</Text>
-        <FlatList
-          data={reviews}
-          renderItem={renderReviewItem}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      </View>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleAddReview}>
-          <Text style={styles.buttonIcon}>
-            <MaterialCommunityIcons
-              name="message-draw"
-              size={20}
-              color="white"
-            />
-          </Text>
-          <Text style={styles.buttonText}>Add Review</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleAddToCart}>
-          <Text style={styles.buttonIcon}>
-            <MaterialCommunityIcons
-              name="cart-arrow-down"
-              size={20}
-              color="white"
-            />
-          </Text>
-          <Text style={styles.buttonText}>Add to Cart</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingLeft: 16,
+    paddingTop: 16,
     backgroundColor: "#F5F5F5",
   },
   productContainer: {
@@ -168,6 +178,7 @@ const styles = StyleSheet.create({
   },
   reviewsContainer: {
     marginTop: 16,
+    flex: 1,
   },
   reviewsTitle: {
     fontSize: 18,
@@ -189,6 +200,7 @@ const styles = StyleSheet.create({
   },
   reviewComment: {
     fontSize: 16,
+    paddingRight: 16,
   },
   buttonContainer: {
     flexDirection: "row",
