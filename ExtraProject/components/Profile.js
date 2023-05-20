@@ -2,11 +2,12 @@ import React, { useContext } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import AppContext, { Actions } from "../AppContext";
 
-const Profile = ({}) => {
+const Profile = ({ navigation }) => {
   const { state, dispatch } = useContext(AppContext);
 
   const onLogout = () => {
     dispatch({ type: Actions.LOGOUT });
+    navigation.navigate("Products");
   };
 
   return (

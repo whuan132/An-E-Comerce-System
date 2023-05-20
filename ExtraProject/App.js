@@ -2,14 +2,12 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import React, { useReducer, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import AppContext, { reducer, Actions } from "./AppContext";
+import AppContext, { reducer, Actions, Keys } from "./AppContext";
 import LoginScreen from "./components/LoginScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProductScreen from "./components/ProductScreen";
 import FullScreenLoader from "./components/FullScreenLoader";
 import CustomerScreen from "./components/CustomerScreen";
-
-const USER_KEY = "CS571-202305-ExtraProject-UserInfo";
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, {
@@ -20,12 +18,27 @@ export default function App() {
     products: [],
   });
 
+  const loadCart = async (user) => {
+    const cartData = await AsyncStorage.getItem(Keys.CART_KEY + "#" + user.id);
+    if (cartData) {
+      dispatch({ type: Actions.CART, payload: JSON.parse(cartData) });
+    }
+  };
+
   // Load user info
   useEffect(() => {
     (async () => {
-      const data = await AsyncStorage.getItem(USER_KEY);
+      const data = await AsyncStorage.getItem(Keys.USER_KEY);
       if (data) {
-        dispatch({ type: Actions.LOGIN, payload: JSON.parse(data) });
+        const user = JSON.parse(data);
+        if (user && !!user.id && !!user.token) {
+          dispatch({ type: Actions.LOGIN, payload: user });
+          // cart
+          loadCart(user);
+        } else {
+          await AsyncStorage.removeItem(Keys.USER_KEY);
+          dispatch({ type: Actions.LOGOUT });
+        }
       } else {
         dispatch({ type: Actions.HIDE_LOADING });
       }
@@ -35,11 +48,13 @@ export default function App() {
   // Save or remove user info to async storage
   useEffect(() => {
     (async () => {
-      const info = state.user;
-      if (info === null) {
-        await AsyncStorage.removeItem(USER_KEY);
+      if (state.user === null) {
+        await AsyncStorage.removeItem(Keys.USER_KEY);
       } else {
-        await AsyncStorage.setItem(USER_KEY, JSON.stringify(info));
+        const user = state.user;
+        await AsyncStorage.setItem(Keys.USER_KEY, JSON.stringify(user));
+        // cart
+        loadCart(user);
       }
     })();
   }, [state.user]);
