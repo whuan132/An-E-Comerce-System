@@ -35,7 +35,7 @@ const Signin = ({ navigation }) => {
       if (obj.code === 0) {
         console.log(res.data);
         setLoginError("");
-        dispatch({ type: Actions.LOGIN, payload: obj });
+        dispatch({ type: Actions.LOGIN, payload: obj.data });
       } else {
         setLoginError("Invalid email or password");
       }

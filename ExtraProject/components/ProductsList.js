@@ -18,7 +18,29 @@ import AppContext, { Actions } from "../AppContext";
 const ProductsList = ({ navigation }) => {
   const { state, dispatch } = useContext(AppContext);
 
-  const onAddToCart = (item) => {};
+  const onAddToCart = (item) => {
+    const cart = [...state.cart];
+
+    let found = false;
+    for (let i = 0; i < cart.length; i++) {
+      if (item._id == cart[i]._id) {
+        cart[i].quantity++;
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      cart.push({
+        _id: item._id,
+        name: item.name,
+        price: item.price,
+        quantity: 1,
+      });
+    }
+
+    dispatch({ type: Actions.CART, payload: cart });
+  };
 
   const onDeleteProduct = (item) => {
     Alert.alert("Confirm", "Do you want to delete this product?", [
@@ -75,31 +97,40 @@ const ProductsList = ({ navigation }) => {
       <View style={styles.productItem}>
         <Image source={{ uri: `${item.images}` }} style={styles.productImage} />
         <View style={styles.productDetails}>
+          <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
           <Text style={styles.productName}>{item.name}</Text>
           <Text style={styles.productCategory}>{item.category}</Text>
-          <Text style={styles.productPrice}>${item.price}</Text>
         </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => onAddToCart(item)}
-          >
-            <Text style={styles.buttonText}>Add</Text>
-          </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor: "green" }]}
-            onPress={() => onEditProduct(item)}
-          >
-            <Text style={[styles.buttonText, { color: "white" }]}>Edit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor: "red" }]}
-            onPress={() => onDeleteProduct(item)}
-          >
-            <Text style={[styles.buttonText, { color: "white" }]}>Delete</Text>
-          </TouchableOpacity>
-        </View>
+        {state.user.role === "customer" ? (
+          // Customer
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => onAddToCart(item)}
+            >
+              <Text style={styles.buttonText}>Add to cart</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          // Admin
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: "green" }]}
+              onPress={() => onEditProduct(item)}
+            >
+              <Text style={[styles.buttonText, { color: "white" }]}>Edit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: "red" }]}
+              onPress={() => onDeleteProduct(item)}
+            >
+              <Text style={[styles.buttonText, { color: "white" }]}>
+                Delete
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     );
   };
@@ -119,9 +150,12 @@ const ProductsList = ({ navigation }) => {
         contentContainerStyle={styles.listContent}
       />
 
-      <TouchableOpacity style={styles.addButton} onPress={onAddProduct}>
-        <Text style={styles.addButtonText}>Add Product</Text>
-      </TouchableOpacity>
+      {/* Admin */}
+      {state.user.role === "admin" && (
+        <TouchableOpacity style={styles.addButton} onPress={onAddProduct}>
+          <Text style={styles.addButtonText}>Add Product</Text>
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 };
@@ -138,7 +172,9 @@ const styles = StyleSheet.create({
   productItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 8,
+    marginTop: 8,
+    marginLeft: 8,
+    marginRight: 8,
     padding: 8,
     backgroundColor: "white",
     borderRadius: 8,
@@ -153,8 +189,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   productName: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 14,
+    color: "#888",
   },
   productCategory: {
     fontSize: 14,
@@ -163,7 +199,7 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 16,
     fontWeight: "bold",
-    marginTop: 4,
+    marginBottom: 10,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -172,19 +208,19 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: "#DDDDDD",
+    borderRadius: 16,
+    backgroundColor: "green",
     marginLeft: 8,
   },
   buttonText: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "black",
+    color: "white",
   },
   addButton: {
     backgroundColor: "blue",
     padding: 10,
-    borderRadius: 4,
+    borderRadius: 16,
     marginBottom: 30,
     marginLeft: 30,
     marginRight: 30,

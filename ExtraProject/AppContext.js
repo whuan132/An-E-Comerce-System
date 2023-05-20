@@ -8,9 +8,13 @@ const AppContext = createContext();
 const Actions = {
   LOGIN: "login",
   LOGOUT: "logout",
+
   PRODUCTS: "products",
+
   SHOW_LOADING: "show_loading",
   HIDE_LOADING: "hide_loading",
+
+  CART: "cart",
 };
 
 // Reducer function
@@ -20,7 +24,7 @@ const reducer = (state, action) => {
       return { ...state, user: action.payload, isLoading: true };
 
     case Actions.LOGOUT:
-      return { ...state, user: null };
+      return { ...state, user: null, order: [], cart: [] };
 
     case Actions.PRODUCTS:
       return { ...state, products: action.payload, isLoading: false };
@@ -30,6 +34,9 @@ const reducer = (state, action) => {
 
     case Actions.HIDE_LOADING:
       return { ...state, isLoading: false };
+
+    case Actions.CART:
+      return { ...state, cart: action.payload };
 
     default:
       return state;

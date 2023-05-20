@@ -7,6 +7,7 @@ import LoginScreen from "./components/LoginScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProductScreen from "./components/ProductScreen";
 import FullScreenLoader from "./components/FullScreenLoader";
+import CustomerScreen from "./components/CustomerScreen";
 
 const USER_KEY = "CS571-202305-ExtraProject-UserInfo";
 
@@ -14,6 +15,7 @@ export default function App() {
   const [state, dispatch] = useReducer(reducer, {
     isLoading: true,
     user: null,
+    cart: [],
     order: [],
     products: [],
   });
@@ -24,6 +26,8 @@ export default function App() {
       const data = await AsyncStorage.getItem(USER_KEY);
       if (data) {
         dispatch({ type: Actions.LOGIN, payload: JSON.parse(data) });
+      } else {
+        dispatch({ type: Actions.HIDE_LOADING });
       }
     })();
   }, []);
@@ -45,7 +49,7 @@ export default function App() {
       {state.isLoading && <FullScreenLoader />}
       <NavigationContainer>
         {state.user === null && <LoginScreen />}
-        {state.user && <ProductScreen />}
+        {state.user && <CustomerScreen />}
       </NavigationContainer>
     </AppContext.Provider>
   );
