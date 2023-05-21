@@ -109,28 +109,30 @@ const ProductDetail = ({ navigation, route }) => {
           </View>
         </View>
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={handleAddReview}>
-            <Text style={styles.buttonIcon}>
-              <MaterialCommunityIcons
-                name="message-draw"
-                size={20}
-                color="white"
-              />
-            </Text>
-            <Text style={styles.buttonText}>Add Review</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={handleAddToCart}>
-            <Text style={styles.buttonIcon}>
-              <MaterialCommunityIcons
-                name="cart-arrow-down"
-                size={20}
-                color="white"
-              />
-            </Text>
-            <Text style={styles.buttonText}>Add to Cart</Text>
-          </TouchableOpacity>
-        </View>
+        {state.user.role === "customer" && (
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={handleAddReview}>
+              <Text style={styles.buttonIcon}>
+                <MaterialCommunityIcons
+                  name="message-draw"
+                  size={20}
+                  color="white"
+                />
+              </Text>
+              <Text style={styles.buttonText}>Add Review</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleAddToCart}>
+              <Text style={styles.buttonIcon}>
+                <MaterialCommunityIcons
+                  name="cart-arrow-down"
+                  size={20}
+                  color="white"
+                />
+              </Text>
+              <Text style={styles.buttonText}>Add to Cart</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         <View style={styles.reviewsContainer}>
           <Text style={styles.reviewsTitle}>Reviews</Text>

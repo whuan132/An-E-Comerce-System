@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 16,
     marginTop: 5,
-    width: 80,
+    width: 100,
   },
   buttonText: {
     fontWeight: "bold",

@@ -51,14 +51,19 @@ const ProductsList = ({ navigation }) => {
         onPress: async () => {
           console.log("OK Pressed");
           dispatch({ type: Actions.SHOW_LOADING });
-          // submit to server and refresh
-          await state.api.delete("/products/" + item._id);
-          // update local context data
-          const temp = [...state.products];
-          temp.splice(temp.indexOf(item), 1);
-          dispatch({ type: Actions.PRODUCTS, payload: temp });
-          // fetch data from server
-          refreshData();
+          try {
+            // submit to server and refresh
+            await state.api.delete("/products/" + item._id);
+            // update local context data
+            const temp = [...state.products];
+            temp.splice(temp.indexOf(item), 1);
+            dispatch({ type: Actions.PRODUCTS, payload: temp });
+            // fetch data from server
+            refreshData();
+          } catch (err) {
+            console.log(err);
+            dispatch({ type: Actions.HIDE_LOADING });
+          }
         },
       },
     ]);
@@ -118,8 +123,8 @@ const ProductsList = ({ navigation }) => {
           <Text style={styles.productCategory}>{item.category}</Text>
         </View>
 
-        {state.user.role === "customer" ? (
-          // Customer
+        {/* Customer */}
+        {state.user.role === "customer" && (
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
@@ -128,8 +133,10 @@ const ProductsList = ({ navigation }) => {
               <Text style={styles.buttonText}>Add to cart</Text>
             </TouchableOpacity>
           </View>
-        ) : (
-          // Admin
+        )}
+
+        {/* Admin */}
+        {state.user.role === "admin" && (
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[styles.button, { backgroundColor: "green" }]}
@@ -215,20 +222,20 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
   },
   button: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 16,
     backgroundColor: "#4287f5",
-    marginLeft: 8,
+    padding: 10,
+    borderRadius: 16,
+    marginTop: 5,
+    width: 100,
   },
   buttonText: {
-    fontSize: 14,
-    fontWeight: "bold",
     color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
   addButton: {
     backgroundColor: "#4287f5",
