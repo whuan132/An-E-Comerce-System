@@ -19,4 +19,20 @@ router.patch(
   orderController.returnOrder
 );
 
+router.get(
+  "/orders",
+  authentication.verifyAdminToken,
+  orderController.getAllOrders
+);
+router.delete(
+  "/orders/:order_id",
+  authentication.verifyAdminToken,
+  orderController.deleteOrder
+);
+router.patch(
+  "/orders/:order_id/delivery",
+  authentication.verifyAdminToken,
+  orderController.deliveryOrder
+);
+
 module.exports = router;

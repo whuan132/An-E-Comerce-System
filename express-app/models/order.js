@@ -172,3 +172,17 @@ exports.deleteProduct = async (order_id, product_id) => {
   }
   return ret;
 };
+
+// Delete an order
+exports.deleteOrder = async (order_id) => {
+  let ret = null;
+  try {
+    const col = await getOrderCollection();
+    ret = await col.deleteOne({
+      _id: new ObjectId(order_id),
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  return ret;
+};

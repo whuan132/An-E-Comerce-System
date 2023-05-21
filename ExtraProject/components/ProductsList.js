@@ -55,7 +55,7 @@ const ProductsList = ({ navigation }) => {
           await state.api.delete("/products/" + item._id);
           // update local context data
           const temp = [...state.products];
-          temp.splice(temp.indexOf(temp), 1);
+          temp.splice(temp.indexOf(item), 1);
           dispatch({ type: Actions.PRODUCTS, payload: temp });
           // fetch data from server
           refreshData();

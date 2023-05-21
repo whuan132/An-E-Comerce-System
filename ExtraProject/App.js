@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProductScreen from "./components/ProductScreen";
 import FullScreenLoader from "./components/FullScreenLoader";
 import CustomerScreen from "./components/CustomerScreen";
+import AdminScreen from "./components/AdminScreen";
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, {
@@ -82,7 +83,8 @@ export default function App() {
       {state.isLoading && <FullScreenLoader />}
       <NavigationContainer>
         {state.user === null && <LoginScreen />}
-        {state.user && <CustomerScreen />}
+        {state.user && state.user.role === "customer" && <CustomerScreen />}
+        {state.user && state.user.role === "admin" && <AdminScreen />}
       </NavigationContainer>
     </AppContext.Provider>
   );

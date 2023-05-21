@@ -43,3 +43,35 @@ exports.returnOrder = async (req, res) => {
     res.send({ code: 500, data: err.message });
   }
 };
+
+// Delete an order
+exports.deleteOrder = async (req, res) => {
+  try {
+    const ret = await order.deleteOrder(req.params.order_id);
+    if (ret) {
+      res.send({ code: 0, data: ret });
+    } else {
+      res.send({ code: 403, data: "error" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.send({ code: 500, data: err.message });
+  }
+};
+
+// Delivery an order
+exports.deliveryOrder = async (req, res) => {
+  try {
+    const ret = await order.updateOrder(req.params.order_id, {
+      status: "delivered",
+    });
+    if (ret) {
+      res.send({ code: 0, data: ret });
+    } else {
+      res.send({ code: 403, data: "error" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.send({ code: 500, data: err.message });
+  }
+};

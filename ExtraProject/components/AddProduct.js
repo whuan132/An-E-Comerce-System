@@ -90,6 +90,7 @@ const AddProduct = ({ navigation, route }) => {
         // update local context data
         if (res.data.code === 0) {
           temp._id = res.data.data.insertedId;
+          temp.review = { score: 0, feedbacks: [] };
           const tempProducts = [...state.products, temp];
           dispatch({ type: Actions.PRODUCTS, payload: tempProducts });
         }

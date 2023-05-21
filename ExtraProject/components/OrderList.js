@@ -5,6 +5,7 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import AppContext, { Actions } from "../AppContext";
@@ -34,7 +35,12 @@ const OrderList = ({ navigation }) => {
   const refreshData = () => {
     (async () => {
       try {
-        const res = await state.api.get("user/" + state.user.id + "/orders");
+        let api = "user/" + state.user.id + "/orders";
+        if (state.user.role === "admin") {
+          // admin
+          api = "/orders";
+        }
+        const res = await state.api.get(api);
         if (res && res.data && res.data.code == 0) {
           dispatch({ type: Actions.ORDER, payload: res.data.data || [] });
         }
@@ -54,6 +60,51 @@ const OrderList = ({ navigation }) => {
     navigation.navigate("Detail", item);
   };
 
+  const handleDelivery = async (item) => {
+    dispatch({ type: Actions.SHOW_LOADING });
+    try {
+      // submit to server and refresh
+      await state.api.patch("/orders/" + item._id + "/delivery");
+      // update local context data
+      item.status = "delivered";
+      dispatch({ type: Actions.ORDER, payload: [...state.order] });
+      // fetch data from server
+      refreshData();
+    } catch (err) {
+      console.log(err);
+      dispatch({ type: Actions.HIDE_LOADING });
+    }
+  };
+
+  const handleDelete = (item) => {
+    Alert.alert("Confirm", "Do you want to delete this order?", [
+      {
+        text: "No",
+        onPress: () => console.log("Cancel Pressed"),
+      },
+      {
+        text: "Yes",
+        onPress: async () => {
+          console.log("OK Pressed");
+          dispatch({ type: Actions.SHOW_LOADING });
+          try {
+            // submit to server and refresh
+            await state.api.delete("/orders/" + item._id);
+            // update local context data
+            const temp = [...state.order];
+            temp.splice(temp.indexOf(item), 1);
+            dispatch({ type: Actions.ORDER, payload: temp });
+            // fetch data from server
+            refreshData();
+          } catch (err) {
+            console.log(err);
+            dispatch({ type: Actions.HIDE_LOADING });
+          }
+        },
+      },
+    ]);
+  };
+
   const renderItem = ({ item }) => {
     return (
       <View style={styles.orderContainer}>
@@ -69,14 +120,50 @@ const OrderList = ({ navigation }) => {
           </Text>
         </View>
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => handleDetail(item)}
-          >
-            <Text style={styles.buttonText}>View Detail</Text>
-          </TouchableOpacity>
-        </View>
+        {/* Customer */}
+        {state.user.role === "customer" && (
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => handleDetail(item)}
+            >
+              <Text style={styles.buttonText}>View Detail</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {/* Admin */}
+        {state.user.role === "admin" && (
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                {
+                  backgroundColor:
+                    item.status === "ordered" ? "green" : "lightgrey",
+                  borderWidth: 0,
+                },
+              ]}
+              onPress={() => handleDelivery(item)}
+              disabled={item.status !== "ordered"}
+            >
+              <Text style={[styles.buttonText, { color: "white" }]}>
+                Delivery
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { backgroundColor: "red", borderWidth: 0 },
+              ]}
+              onPress={() => handleDelete(item)}
+            >
+              <Text style={[styles.buttonText, { color: "white" }]}>
+                Delete
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     );
   };
@@ -137,7 +224,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   buttonContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
   },
   button: {
@@ -145,6 +232,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 16,
     marginTop: 5,
+    width: 80,
   },
   buttonText: {
     fontWeight: "bold",
