@@ -2,8 +2,6 @@ import React, { useContext } from "react";
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
 import AppContext, { Actions } from "../AppContext";
 import Icon from "react-native-vector-icons/FontAwesome";
-import axios from "axios";
-import Env from "../Env";
 
 const OrderDetail = ({ navigation, route }) => {
   const order = route.params;
@@ -13,8 +11,8 @@ const OrderDetail = ({ navigation, route }) => {
     dispatch({ type: Actions.SHOW_LOADING });
     (async () => {
       try {
-        const res = await axios.patch(
-          Env.API + "user/" + state.user.id + "/orders/" + order._id + "/return"
+        const res = await state.api.patch(
+          "/user/" + state.user.id + "/orders/" + order._id + "/return"
         );
         if (res && res.data && res.data.code == 0) {
           dispatch({ type: Actions.HIDE_LOADING });

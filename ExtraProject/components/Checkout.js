@@ -7,8 +7,6 @@ import {
   FlatList,
   Image,
 } from "react-native";
-import axios from "axios";
-import Env from "../Env";
 import Icon from "react-native-vector-icons/FontAwesome";
 import AppContext, { Actions } from "../AppContext";
 
@@ -40,8 +38,8 @@ const Checkout = ({ navigation }) => {
         total: getTotalPrice(),
         payment: selectedPaymentMethod,
       };
-      const res = await axios.post(
-        Env.API + "user/" + state.user.id + "/orders",
+      const res = await state.api.post(
+        "/user/" + state.user.id + "/orders",
         obj
       );
       // update local context data

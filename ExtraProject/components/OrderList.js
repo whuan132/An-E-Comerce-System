@@ -7,8 +7,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import axios from "axios";
-import Env from "../Env";
 import AppContext, { Actions } from "../AppContext";
 
 const OrderList = ({ navigation }) => {
@@ -36,9 +34,7 @@ const OrderList = ({ navigation }) => {
   const refreshData = () => {
     (async () => {
       try {
-        const res = await axios.get(
-          Env.API + "user/" + state.user.id + "/orders"
-        );
+        const res = await state.api.get("user/" + state.user.id + "/orders");
         if (res && res.data && res.data.code == 0) {
           dispatch({ type: Actions.ORDER, payload: res.data.data || [] });
         }

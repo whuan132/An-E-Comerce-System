@@ -9,9 +9,7 @@ import {
   TouchableHighlight,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
-import Env from "../Env";
 import AppContext, { Actions } from "../AppContext";
 
 const AddProduct = ({ navigation, route }) => {
@@ -88,7 +86,7 @@ const AddProduct = ({ navigation, route }) => {
           price: product.price,
         };
         dispatch({ type: Actions.SHOW_LOADING });
-        res = await axios.post(Env.API + "products", temp);
+        res = await state.api.post("/products", temp);
         // update local context data
         if (res.data.code === 0) {
           temp._id = res.data.data.insertedId;
@@ -110,7 +108,7 @@ const AddProduct = ({ navigation, route }) => {
           return;
         }
         dispatch({ type: Actions.SHOW_LOADING });
-        res = await axios.patch(Env.API + "products/" + data._id, temp);
+        res = await state.api.patch("/products/" + data._id, temp);
         // update local context data
         if (res.data.code === 0) {
           const tempProducts = [...state.products];

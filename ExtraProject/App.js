@@ -16,6 +16,7 @@ export default function App() {
     cart: [],
     order: [],
     products: [],
+    api: null,
   });
 
   const loadCart = async (user) => {
@@ -58,6 +59,23 @@ export default function App() {
       }
     })();
   }, [state.user]);
+
+  // Api changed
+  useEffect(() => {
+    const api = state.api;
+    if (api) {
+      api.interceptors.response.use(
+        (response) => response,
+        (error) => {
+          if (error.response && error.response.status === 403) {
+            dispatch({ type: Actions.LOGOUT });
+            return;
+          }
+          return Promise.reject(error);
+        }
+      );
+    }
+  }, [state.api]);
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>

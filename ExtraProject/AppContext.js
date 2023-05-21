@@ -29,10 +29,25 @@ const Keys = {
 const reducer = (state, action) => {
   switch (action.type) {
     case Actions.LOGIN:
-      return { ...state, user: action.payload, isLoading: true };
+      const api = axios.create({
+        baseURL: Env.API,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: action.payload.token,
+        },
+      });
+      return { ...state, user: action.payload, api: api, isLoading: true };
 
     case Actions.LOGOUT:
-      return { ...state, user: null, order: [], cart: [], isLoading: false };
+      delete axios.defaults.headers.common["Authorization"];
+      return {
+        ...state,
+        user: null,
+        api: null,
+        order: [],
+        cart: [],
+        isLoading: false,
+      };
 
     case Actions.PRODUCTS:
       return { ...state, products: action.payload, isLoading: false };

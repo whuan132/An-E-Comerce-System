@@ -6,8 +6,6 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import axios from "axios";
-import Env from "../Env";
 import AppContext, { Actions } from "../AppContext";
 import Icon from "react-native-vector-icons/FontAwesome";
 
@@ -33,7 +31,7 @@ const AddReview = ({ navigation, route }) => {
       comment: comment || "no comment",
     };
     try {
-      await axios.post(Env.API + "products/" + product._id + "/reviews", obj);
+      await state.api.post("/products/" + product._id + "/reviews", obj);
       // update local context data
       const review = product.review;
       const feedbacks = [...review.feedbacks, obj];
