@@ -84,36 +84,38 @@ const Checkout = ({ navigation }) => {
         contentContainerStyle={styles.itemsContainer}
       />
 
-      <Text style={styles.totalText}>Total: ${getTotalPrice()}</Text>
+      <View style={styles.blockContainer}>
+        <Text style={styles.blockTitle}>Payment method</Text>
+        {paymentMethods.map((item) => (
+          <TouchableOpacity
+            key={item.id}
+            style={[
+              styles.paymentMethodContainer,
+              selectedPaymentMethod === item.id && styles.selectedPaymentMethod,
+            ]}
+            onPress={() => setSelectedPaymentMethod(item.id)}
+          >
+            <Icon
+              name={item.icon}
+              size={24}
+              color={selectedPaymentMethod === item.id ? "#4287f5" : "#D3D3D3"}
+            />
+            <Text style={styles.paymentMethodName}>{item.name}</Text>
+          </TouchableOpacity>
+        ))}
 
-      {paymentMethods.map((item) => (
+        <Text style={styles.totalText}>Total: ${getTotalPrice()}</Text>
         <TouchableOpacity
-          key={item.id}
           style={[
-            styles.paymentMethodContainer,
-            selectedPaymentMethod === item.id && styles.selectedPaymentMethod,
+            styles.checkoutButton,
+            selectedPaymentMethod === "" ? { backgroundColor: "#D3D3D3" } : {},
           ]}
-          onPress={() => setSelectedPaymentMethod(item.id)}
+          onPress={handleCheckout}
+          disabled={selectedPaymentMethod === ""}
         >
-          <Icon
-            name={item.icon}
-            size={24}
-            color={selectedPaymentMethod === item.id ? "#4287f5" : "#D3D3D3"}
-          />
-          <Text style={styles.paymentMethodName}>{item.name}</Text>
+          <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
         </TouchableOpacity>
-      ))}
-
-      <TouchableOpacity
-        style={[
-          styles.checkoutButton,
-          selectedPaymentMethod === "" ? { backgroundColor: "#D3D3D3" } : {},
-        ]}
-        onPress={handleCheckout}
-        disabled={selectedPaymentMethod === ""}
-      >
-        <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
-      </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -121,11 +123,19 @@ const Checkout = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: "#F5F5F5",
+  },
+  blockContainer: {
+    padding: 16,
+  },
+  blockTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 16,
   },
   itemsContainer: {
     flexGrow: 1,
+    padding: 8,
   },
   itemContainer: {
     flexDirection: "row",

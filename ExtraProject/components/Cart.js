@@ -80,13 +80,7 @@ const Cart = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        paddingTop: Platform.OS === "android" ? 30 : 0,
-        paddingBottom: 200,
-      }}
-    >
+    <View style={styles.container}>
       {state.cart.length <= 0 && (
         <View style={styles.emptyCartContainer}>
           <Text style={styles.emptyCartText}>Your cart is empty</Text>
@@ -102,13 +96,22 @@ const Cart = ({ navigation }) => {
             contentContainerStyle={styles.listContent}
           />
 
-          <Text style={styles.totalPrice}>Total: ${totalPrice.toFixed(2)}</Text>
-          <TouchableOpacity style={styles.checkoutButton} onPress={onCheckout}>
-            <Text style={styles.checkoutButtonText}>Continue to checkout</Text>
-          </TouchableOpacity>
+          <View style={styles.blockContainer}>
+            <Text style={styles.totalPrice}>
+              Total: ${totalPrice.toFixed(2)}
+            </Text>
+            <TouchableOpacity
+              style={styles.checkoutButton}
+              onPress={onCheckout}
+            >
+              <Text style={styles.checkoutButtonText}>
+                Continue to checkout
+              </Text>
+            </TouchableOpacity>
+          </View>
         </>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -116,6 +119,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F5F5F5",
+  },
+  blockContainer: {
+    padding: 16,
   },
   emptyCartContainer: {
     flex: 1,
@@ -155,9 +161,9 @@ const styles = StyleSheet.create({
   totalPrice: {
     fontSize: 18,
     fontWeight: "bold",
-    marginTop: 8,
-    marginRight: 40,
-    textAlign: "right",
+    marginLeft: 8,
+    marginTop: 16,
+    marginBottom: 8,
   },
   quantityContainer: {
     flexDirection: "row",
@@ -175,16 +181,13 @@ const styles = StyleSheet.create({
   },
   checkoutButton: {
     backgroundColor: "#4287f5",
-    padding: 10,
+    padding: 12,
     borderRadius: 16,
-    marginBottom: 30,
-    marginLeft: 30,
-    marginRight: 30,
-    marginTop: 8,
+    alignItems: "center",
   },
   checkoutButtonText: {
     color: "white",
-    textAlign: "center",
+    fontSize: 16,
     fontWeight: "bold",
   },
 });

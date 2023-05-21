@@ -62,15 +62,15 @@ const OrderList = ({ navigation }) => {
     return (
       <View style={styles.orderContainer}>
         <View style={styles.orderDetails}>
+          <Text style={styles.orderTotal}>Total: ${item.total}</Text>
+          <Text style={styles.orderText}>Status: {item.status}</Text>
           <Text style={styles.orderText}>
             Date: {getFormattedOrderTime(item.time)}
           </Text>
-          <Text style={styles.orderText}>Products: {item.products.length}</Text>
-          <Text style={styles.orderText}>Status: {item.status}</Text>
+          <Text style={styles.orderText}>Items: {item.products.length}</Text>
           <Text style={styles.orderText}>
             Payment: {getPaymentString(item.payment)}
           </Text>
-          <Text style={styles.orderTotal}>Total: ${item.total}</Text>
         </View>
 
         <View style={styles.buttonContainer}>
@@ -125,11 +125,11 @@ const styles = StyleSheet.create({
   },
   orderText: {
     fontSize: 14,
-    marginBottom: 8,
   },
   orderTotal: {
     fontSize: 16,
     fontWeight: "bold",
+    marginBottom: 6,
   },
   emptyContainer: {
     flex: 1,
