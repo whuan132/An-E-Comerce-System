@@ -17,6 +17,7 @@ const Actions = {
   HIDE_LOADING: "hide_loading",
 
   CART: "cart",
+  ORDER: "order",
 };
 
 const Keys = {
@@ -52,7 +53,10 @@ const reducer = (state, action) => {
           );
         })();
       }
-      return { ...state, cart: action.payload };
+      return { ...state, cart: action.payload, isLoading: false };
+
+    case Actions.ORDER:
+      return { ...state, order: action.payload, isLoading: false };
 
     default:
       return state;

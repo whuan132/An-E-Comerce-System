@@ -19,7 +19,7 @@ const AddProduct = ({ navigation, route }) => {
   const { state, dispatch } = useContext(AppContext);
   const [product, setProduct] = useState({
     name: data ? data.name : "",
-    image: data ? data.images : "",
+    images: data ? data.images : "",
     category: data ? data.category : "",
     price: data ? data.price : 0,
   });
@@ -53,7 +53,7 @@ const AddProduct = ({ navigation, route }) => {
       const base64String = result.assets[0].base64;
       setProduct((prevProduct) => ({
         ...prevProduct,
-        image: `data:image/jpg;base64,${base64String}`,
+        images: `data:image/jpg;base64,${base64String}`,
       }));
     }
   };
@@ -68,7 +68,7 @@ const AddProduct = ({ navigation, route }) => {
         setErrorMessage("Category is null");
         return;
       }
-      if (product.image == "") {
+      if (product.images == "") {
         setErrorMessage("Image is null");
         return;
       }
@@ -83,7 +83,7 @@ const AddProduct = ({ navigation, route }) => {
         // Add
         const temp = {
           name: product.name,
-          images: product.image,
+          images: product.images,
           category: product.category,
           price: product.price,
         };
@@ -126,7 +126,13 @@ const AddProduct = ({ navigation, route }) => {
       // Handle successful
       const obj = res.data;
       if (obj.code === 0) {
-        setProduct({ ...product, name: "", image: "", category: "", price: 0 });
+        setProduct({
+          ...product,
+          name: "",
+          images: "",
+          category: "",
+          price: 0,
+        });
         setErrorMessage(null);
         navigation.goBack();
       } else {
@@ -155,8 +161,8 @@ const AddProduct = ({ navigation, route }) => {
           onChangeText={(value) => handleChange("category", value)}
         />
         <Button title="Take Picture" onPress={handleTakePicture} />
-        {product.image && (
-          <Image source={{ uri: product.image }} style={styles.image} />
+        {product.images && (
+          <Image source={{ uri: product.images }} style={styles.images} />
         )}
         <TextInput
           style={styles.input}
@@ -208,7 +214,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
   },
-  image: {
+  images: {
     width: 200,
     height: 200,
     marginBottom: 10,

@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import ProductScreen from "./ProductScreen";
 import CartScreen from "./CartScreen";
 import Profile from "./Profile";
+import OrderScreen from "./OrderScreen";
+import AppContext from "../AppContext";
 
 const Tab = createBottomTabNavigator();
 
 const CustomerScreen = () => {
+  const { state } = useContext(AppContext);
   return (
     <Tab.Navigator
       initialRouteName="Products"
@@ -31,6 +34,21 @@ const CustomerScreen = () => {
           title: "My Cart",
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="cart" color={color} size={size} />
+          ),
+          tabBarBadge: state.cart.length > 0 ? state.cart.length : null,
+        }}
+      />
+      <Tab.Screen
+        name="MyOrder"
+        component={OrderScreen}
+        options={{
+          title: "Orders",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="view-list"
+              color={color}
+              size={size}
+            />
           ),
         }}
       />

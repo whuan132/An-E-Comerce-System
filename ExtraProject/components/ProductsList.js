@@ -10,7 +10,6 @@ import {
   Image,
   Alert,
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import Env from "../Env";
 import AppContext, { Actions } from "../AppContext";
@@ -182,18 +181,15 @@ const ProductsList = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: "#F5F5F5",
   },
   listContent: {
-    paddingBottom: 16,
+    padding: 8,
   },
   productItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 8,
-    marginLeft: 8,
-    marginRight: 8,
+    marginBottom: 8,
     padding: 8,
     backgroundColor: "white",
     borderRadius: 8,

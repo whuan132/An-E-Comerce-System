@@ -27,7 +27,7 @@ const getOrderCollection = async () => {
   const client = new MongoClient(Env.dbUri);
   await client.connect();
   const db = client.db(Env.dbName);
-  colOrder = db.collection("Product");
+  colOrder = db.collection("Order");
   return colOrder;
 };
 getOrderCollection();
@@ -61,14 +61,14 @@ const updateTotal = async (order_id) => {
 exports.updateTotal = updateTotal;
 
 // Add a new order
-exports.addOrder = async (obj) => {
+exports.addOrder = async (user_id, obj) => {
   let ret = null;
   try {
     const col = await getOrderCollection();
     obj._id = new ObjectId();
-    obj.time = Date.now;
-    obj.total = 0;
-    obj.products = [];
+    obj.userId = new ObjectId(user_id);
+    obj.time = Date.now();
+    obj.status = "ordered";
     ret = await col.insertOne(obj);
   } catch (err) {
     console.log(err);
@@ -77,11 +77,15 @@ exports.addOrder = async (obj) => {
 };
 
 // Get all of orders
-exports.getAllOrders = async () => {
+exports.getAllOrders = async (user_id) => {
   let ret = null;
   try {
     const col = await getOrderCollection();
-    ret = col.find({}).toArray();
+    if (!!user_id) {
+      ret = await col.find({ userId: new ObjectId(user_id) }).toArray();
+    } else {
+      ret = await col.find({}).toArray();
+    }
   } catch (err) {
     console.log(err);
   }
@@ -115,7 +119,7 @@ exports.addProduct = async (order_id, obj) => {
   try {
     const col = await getProductCollection();
     obj._id = new ObjectId();
-    ret = col.updateOne(
+    ret = await col.updateOne(
       { _id: new ObjectId(order_id) },
       {
         $push: { products: obj },

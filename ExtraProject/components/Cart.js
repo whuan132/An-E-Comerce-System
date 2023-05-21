@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import AppContext, { Actions } from "../AppContext";
 
-const Cart = () => {
+const Cart = ({ navigation }) => {
   const { state, dispatch } = useContext(AppContext);
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -29,7 +29,9 @@ const Cart = () => {
     dispatch({ type: Actions.CART, payload: cart });
   };
 
-  const onCheckout = () => {};
+  const onCheckout = () => {
+    navigation.navigate("Checkout");
+  };
 
   useEffect(() => {
     // Calculate the total price of all items in the cart
@@ -85,17 +87,27 @@ const Cart = () => {
         paddingBottom: 200,
       }}
     >
-      <FlatList
-        data={state.cart}
-        renderItem={renderItem}
-        keyExtractor={(item) => item._id}
-        contentContainerStyle={styles.listContent}
-      />
+      {state.cart.length <= 0 && (
+        <View style={styles.emptyCartContainer}>
+          <Text style={styles.emptyCartText}>Your cart is empty</Text>
+        </View>
+      )}
 
-      <Text style={styles.totalPrice}>Total: ${totalPrice.toFixed(2)}</Text>
-      <TouchableOpacity style={styles.checkoutButton} onPress={onCheckout}>
-        <Text style={styles.checkoutButtonText}>Continue to checkout</Text>
-      </TouchableOpacity>
+      {state.cart.length > 0 && (
+        <>
+          <FlatList
+            data={state.cart}
+            renderItem={renderItem}
+            keyExtractor={(item) => item._id}
+            contentContainerStyle={styles.listContent}
+          />
+
+          <Text style={styles.totalPrice}>Total: ${totalPrice.toFixed(2)}</Text>
+          <TouchableOpacity style={styles.checkoutButton} onPress={onCheckout}>
+            <Text style={styles.checkoutButtonText}>Continue to checkout</Text>
+          </TouchableOpacity>
+        </>
+      )}
     </SafeAreaView>
   );
 };
@@ -103,19 +115,26 @@ const Cart = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: "#F5F5F5",
   },
+  emptyCartContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyCartText: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
   listContent: {
-    paddingBottom: 16,
+    flexGrow: 1,
+    padding: 8,
   },
   itemContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 8,
-    marginLeft: 8,
-    marginRight: 8,
+    marginBottom: 8,
     padding: 8,
     backgroundColor: "white",
     borderRadius: 8,
@@ -155,7 +174,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   checkoutButton: {
-    backgroundColor: "blue",
+    backgroundColor: "#4287f5",
     padding: 10,
     borderRadius: 16,
     marginBottom: 30,

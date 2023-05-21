@@ -21,12 +21,12 @@ const ProductScreen = () => {
       <Stack.Screen
         name="Edit"
         component={AddProduct}
-        options={{ title: "Edit Product" }}
+        options={{ title: "Product" }}
       />
       <Stack.Screen
         name="Detail"
         component={ProductDetail}
-        options={{ title: "Product Detail" }}
+        options={{ title: "Product" }}
       />
       <Stack.Screen
         name="AddReview"

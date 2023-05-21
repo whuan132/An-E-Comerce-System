@@ -41,7 +41,7 @@ exports.addProduct = async (obj) => {
   try {
     const col = await getProductCollection();
     obj._id = new ObjectId();
-    obj.time = Date.now;
+    obj.time = Date.now();
     obj.review = { score: 0, feedbacks: [] };
     ret = await col.insertOne(obj);
   } catch (err) {

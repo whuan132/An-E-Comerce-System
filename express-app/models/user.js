@@ -47,7 +47,7 @@ exports.insert = async (obj) => {
       obj._id = new ObjectId();
       obj.email = obj.email.toLowerCase();
       obj.role = "customer";
-      obj.time = Date.now;
+      obj.time = Date.now();
       obj.disable = false;
       ret = await col.insertOne(obj);
     }
