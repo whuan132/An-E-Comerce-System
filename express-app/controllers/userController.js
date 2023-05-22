@@ -36,7 +36,6 @@ exports.signUp = async (req, res) => {
     obj.role = "customer";
     const ret = await user.insert(obj);
     if (ret) {
-      const token = jwt.sign(ret, Env.secretKey);
       res.json({ code: 0 });
     } else {
       res.send({ code: 403, data: "error" });

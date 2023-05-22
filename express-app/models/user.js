@@ -53,6 +53,9 @@ exports.getAllUsers = async () => {
 exports.insert = async (obj) => {
   let ret = null;
   try {
+    if (!obj || !obj.email) {
+      return ret;
+    }
     const col = await getUserCollection();
     const temp = await col.findOne({ email: obj.email.toLowerCase() });
     if (temp == null) {

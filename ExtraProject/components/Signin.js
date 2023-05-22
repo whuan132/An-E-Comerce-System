@@ -23,13 +23,13 @@ const Signin = ({ navigation }) => {
   };
 
   const handleLogin = async () => {
+    dispatch({ type: Actions.SHOW_LOADING });
     try {
       const hashedPassword = SHA256(password).toString();
       const res = await axios.post(Env.API + "user/signin", {
         email: email,
         password: hashedPassword,
       });
-
       // Handle successful login response
       const obj = res.data;
       if (obj.code === 0) {
@@ -37,11 +37,13 @@ const Signin = ({ navigation }) => {
         setLoginError("");
         dispatch({ type: Actions.LOGIN, payload: obj.data });
       } else {
+        dispatch({ type: Actions.HIDE_LOADING });
         setLoginError("Invalid email or password");
       }
     } catch (error) {
       // Handle login error
       console.error(error);
+      dispatch({ type: Actions.HIDE_LOADING });
       setLoginError("Invalid email or password");
     }
   };
@@ -99,9 +101,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   button: {
-    backgroundColor: "blue",
+    backgroundColor: "#4287f5",
     padding: 10,
-    borderRadius: 4,
+    borderRadius: 16,
   },
   buttonText: {
     color: "white",
@@ -117,12 +119,10 @@ const styles = StyleSheet.create({
     marginTop: 12,
     padding: 10,
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 4,
+    borderRadius: 16,
   },
   signupButtonText: {
     textAlign: "center",
-    color: "blue",
     fontWeight: "bold",
   },
 });

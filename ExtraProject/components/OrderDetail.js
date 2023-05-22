@@ -98,7 +98,7 @@ const OrderDetail = ({ navigation, route }) => {
       <Text style={styles.text}>Status: {order.status}</Text>
       <Text style={styles.text}>Total: ${order.total.toFixed(2)}</Text>
       <Text style={styles.text}>
-        Payment method: ${getPaymentString(order.payment)}
+        Payment method: {getPaymentString(order.payment)}
       </Text>
 
       <TouchableOpacity
