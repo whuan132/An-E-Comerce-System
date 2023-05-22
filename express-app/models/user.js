@@ -37,16 +37,27 @@ exports.getUserByEmail = async (email) => {
   return ret;
 };
 
+// get a customer by email
+exports.getAllUsers = async () => {
+  let ret = null;
+  try {
+    const col = await getUserCollection();
+    ret = await col.find({}).toArray();
+  } catch (err) {
+    console.log(err);
+  }
+  return ret;
+};
+
 // insert a new customer
 exports.insert = async (obj) => {
   let ret = null;
   try {
     const col = await getUserCollection();
-    const temp = await col.findOne({ email: obj.email, role: "customer" });
+    const temp = await col.findOne({ email: obj.email.toLowerCase() });
     if (temp == null) {
       obj._id = new ObjectId();
       obj.email = obj.email.toLowerCase();
-      obj.role = "customer";
       obj.time = Date.now();
       obj.disable = false;
       ret = await col.insertOne(obj);

@@ -176,7 +176,7 @@ const ProductsList = ({ navigation }) => {
       {/* Admin */}
       {state.user.role === "admin" && (
         <TouchableOpacity style={styles.addButton} onPress={onAddProduct}>
-          <Text style={styles.addButtonText}>Add Product</Text>
+          <Text style={styles.addButtonText}>Add a product</Text>
         </TouchableOpacity>
       )}
     </SafeAreaView>

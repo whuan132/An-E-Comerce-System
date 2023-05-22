@@ -7,6 +7,7 @@ import CartScreen from "./CartScreen";
 import Profile from "./Profile";
 import OrderScreen from "./OrderScreen";
 import AppContext from "../AppContext";
+import UsersScreen from "./UsersScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -35,6 +36,20 @@ const AdminScreen = () => {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
               name="view-list"
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Users"
+        component={UsersScreen}
+        options={{
+          title: "Users",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="account-multiple"
               color={color}
               size={size}
             />

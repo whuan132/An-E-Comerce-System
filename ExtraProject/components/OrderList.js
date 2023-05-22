@@ -35,7 +35,7 @@ const OrderList = ({ navigation }) => {
   const refreshData = () => {
     (async () => {
       try {
-        let api = "user/" + state.user.id + "/orders";
+        let api = "/user/" + state.user.id + "/orders";
         if (state.user.role === "admin") {
           // admin
           api = "/orders";
